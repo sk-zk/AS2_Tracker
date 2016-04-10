@@ -17,6 +17,6 @@ A Windows companion app project for Audiosurf 2.
 
 ![Process Monitor](http://f.bay.rocks/Q8vTN)
 
-![Success](http://f.bay.rocks/XeBYV)
+![Success](http://f.bay.rocks/k0tBh)
 
 ![Session Scores](http://f.bay.rocks/hnjvD)
