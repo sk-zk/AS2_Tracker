@@ -41,6 +41,8 @@ namespace AS2_Companion
         {
             processRunning = false;
 
+            parent.SetLabelStatus(ProcessStatus()); // Set the label to the process status
+
             string[] files = { Properties.Settings.Default.outputPath };
             SongUtil.LoadSongList(parent, files);
 
@@ -83,7 +85,7 @@ namespace AS2_Companion
             // Start the timer
             processTimer.Enabled = true;
 
-            //GC.KeepAlive(processTimer);
+            GC.KeepAlive(processTimer);
         }
 
         static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
