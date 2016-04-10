@@ -82,14 +82,7 @@ namespace AS2_Companion
 
         public void SetCanPost(string _canpost)
         {
-            if (_canpost == "true")
-            {
-                CanPostScore = true;
-            }
-            else
-            {
-                CanPostScore = false;
-            }
+            CanPostScore = _canpost == "true";
         }
     }
 }

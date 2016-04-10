@@ -44,67 +44,76 @@ namespace AS2_Companion
 
             foreach (string file in files)
             {
-                if (Path.GetFileName(file) == outputLog)
-                {
-                    if (LastLogWrite == File.GetLastWriteTime(file)) // Don't load the same file
-                    {
-                        MessageBox.Show("Error: The songs from this file have already loaded.");
-                        break;
-                    }
-
-                    string line;
-                    Match scoreMatch, xmlMatch, artistMatch;
-                    StreamReader output = new StreamReader(file);
-
-                    while ((line = output.ReadLine()) != null)
-                    {
-                        scoreMatch = Regex.Match(line, @"setting score (\d+) for song: (.+)");
-                        artistMatch = Regex.Match(line, "duration(.+)artist:(.+)");
-                        xmlMatch = Regex.Match(line, @"<document><user userid='(.+)' regionid='(.+)' email='(.+)' canpostscores='(.+)'></user><modeid modeid='(.+)'></modeid><modename modename='(.+)'></modename><scoreboards songid='(\d+)' modeid='(\d+)'>");
-
-                        if (scoreMatch.Success)
-                            HandleScoreMatch(parent, scoreMatch, songList);
-
-                        if (artistMatch.Success)
-                            HandleArtistMatch(parent, artistMatch, songList);
-
-                        if (xmlMatch.Success)
-                            HandleXmlMatch(output, xmlMatch, songList);
-                    }
-
-                    output.Close();
-
-                    if (Song.Count <= 0) // If no songs were loaded notify the user
-                    {
-                        MessageBox.Show(String.Format("Error: No submitted scores were found in path {0}", file));
-                        break;
-                    }
-
-                    if (!parent.songBox.Visible)
-                    {
-                        parent.songBox.DisplayMember = "Title";
-
-                        // We may require invoking so use DoUI
-                        parent.DoUI(() =>
-                        {
-                            parent.label1.Visible = false;
-                            parent.songBox.Visible = true;
-                        });
-                    }
-
-                    LastLogWrite = File.GetLastWriteTime(file); // Store the write time of the last loaded file
-
-                    MessageBox.Show(String.Format("Successfully loaded {0:n0} songs from path {1}", Song.Count, file));
-
-                    string xmlString = SerializeSongData(songList); // serialize the song data to a string
-                    //Console.WriteLine(xmlString);
-                    //PostRequest(xmlString); // post the string to the web server
-                }
-                else
+                if (Path.GetFileName(file) != outputLog)
                 {
                     MessageBox.Show(String.Format("Invalid file: {0}", file));
                     break;
                 }
+
+                if (LastLogWrite == File.GetLastWriteTime(file)) // Don't load the same file
+                {
+                    MessageBox.Show("Error: The songs from this file have already loaded.");
+                    break;
+                }
+
+                string line;
+                Match scoreMatch, xmlMatch, artistMatch;
+                StreamReader output = new StreamReader(file);
+
+                while ((line = output.ReadLine()) != null)
+                {
+                    scoreMatch = Regex.Match(line, @"setting score (\d+) for song: (.+)");
+
+                    if (scoreMatch.Success)
+                    {
+                        HandleScoreMatch(parent, scoreMatch, songList);
+                        continue;
+                    }
+
+                    artistMatch = Regex.Match(line, "duration(.+)artist:(.+)");
+
+                    if (artistMatch.Success)
+                    {
+                        HandleArtistMatch(parent, artistMatch, songList);
+                        continue;
+                    }
+
+                    xmlMatch = Regex.Match(line, @"<document><user userid='(.+)' regionid='(.+)' email='(.+)' canpostscores='(.+)'></user><modeid modeid='(.+)'></modeid><modename modename='(.+)'></modename><scoreboards songid='(\d+)' modeid='(\d+)'>");
+
+                    if (xmlMatch.Success)
+                    {
+                        HandleXmlMatch(output, xmlMatch, songList);
+                        continue;
+                    }
+                }
+
+                output.Close();
+
+                if (Song.Count <= 0) // If no songs were loaded notify the user
+                {
+                    MessageBox.Show(String.Format("Error: No submitted scores were found in path {0}", file));
+                    break;
+                }
+
+                if (!parent.songBox.Visible)
+                {
+                    parent.songBox.DisplayMember = "Title";
+
+                    // We may require invoking so use DoUI
+                    parent.DoUI(() =>
+                    {
+                        parent.label1.Visible = false;
+                        parent.songBox.Visible = true;
+                    });
+                }
+
+                LastLogWrite = File.GetLastWriteTime(file); // Store the write time of the last loaded file
+
+                MessageBox.Show(String.Format("Successfully loaded {0:n0} songs from path {1}", Song.Count, file));
+
+                string xmlString = SerializeSongData(songList); // serialize the song data to a string
+                //Console.WriteLine(xmlString);
+                //PostRequest(xmlString); // post the string to the web server
             }
         }
 
