@@ -14,7 +14,8 @@ namespace AS2_Companion
     Make sure the XML match doesn't get stuck looping
 
     Each scoreboard entry doesn't need to include mode
-    Include mode as part of the song instead
+    
+    Handle post request exception
     */
 
     public static class SongUtil
@@ -113,7 +114,7 @@ namespace AS2_Companion
 
                 string xmlString = SerializeSongData(songList); // serialize the song data to a string
                 //Console.WriteLine(xmlString);
-                //PostRequest(xmlString); // post the string to the web server
+                //PostSongData(xmlString); // post the xml to the web server
             }
         }
 
@@ -132,7 +133,7 @@ namespace AS2_Companion
             else // Otherwise create the song and add it to the list
             {
                 songInfo = new Song();
-                songInfo.SetTitle(songTitle);
+                songInfo.Title = songTitle;
                 songInfo.AddScore(songScore);
                 songList.Add(songInfo);
                 parent.songBox.Items.Add(songInfo);
@@ -151,7 +152,7 @@ namespace AS2_Companion
             }
             else // Otherwise add the artist to the song
             {
-                songInfo.SetArtist(songArtist);
+                songInfo.Artist = songArtist;
             }
         }
 
@@ -162,32 +163,33 @@ namespace AS2_Companion
             Match xmlEnd = Regex.Match(line, "</scoreboard>");
             Match xmlInfo;
 
-            Dictionary<string, string> scoreEntry;
+            Scoreboard scoreEntry;
 
-            songInfo.SetID(xmlStart.Groups[7].Value); // Set the song ID
-            songInfo.SetUserID(xmlStart.Groups[1].Value); // Set the user 
-            songInfo.SetUserRegion(xmlStart.Groups[2].Value); // Set user region
-            songInfo.SetUserEmail(xmlStart.Groups[3].Value); // Set user email 
-            songInfo.SetMode(xmlStart.Groups[6].Value); // Set song mode
+            songInfo.SongID = xmlStart.Groups[7].Value; // Set the song ID
+            songInfo.UserID = xmlStart.Groups[1].Value; // Set the user 
+            songInfo.UserRegion = xmlStart.Groups[2].Value; // Set user region
+            songInfo.UserEmail = xmlStart.Groups[3].Value; // Set user email 
+            songInfo.Mode = xmlStart.Groups[6].Value; // Set song mode
+
             songInfo.SetCanPost(xmlStart.Groups[4].Value); // Set if cheats were detected
 
             while (!xmlEnd.Success) // While we aren't at the end of the scoreboard
             {
                 line = input.ReadLine(); // Read the next line of scoreboard
                 xmlEnd = Regex.Match(line, "</scoreboard>"); // Match if we're at the end yet
-                scoreEntry = new Dictionary<string, string>();
+                scoreEntry = new Scoreboard();
 
                 if (xmlEnd.Success) break; // Don't continue if it's the end
 
                 xmlInfo = Regex.Match(line, @"<ride userid='(.+)' steamid='(.+)' score='(.+)' charid='(.+)' ridetime='(.+)'>(<comment>(.+)</comment>)?<modename>(.+)</modename><username>(.+)</username>");
 
-                scoreEntry["UserID"] = xmlInfo.Groups[1].Value;
-                scoreEntry["SteamID"] = xmlInfo.Groups[2].Value;
-                scoreEntry["Score"] = xmlInfo.Groups[3].Value;
-                scoreEntry["RideTime"] = xmlInfo.Groups[5].Value;
-                //scoreEntry["Comment"] = xmlInfo.Groups[7].Value;
-                scoreEntry["Mode"] = xmlInfo.Groups[8].Value;
-                scoreEntry["Username"] = xmlInfo.Groups[9].Value;
+                scoreEntry.UserID = xmlInfo.Groups[1].Value;
+                scoreEntry.SteamID = xmlInfo.Groups[2].Value;
+                scoreEntry.Score = xmlInfo.Groups[3].Value;
+                scoreEntry.RideTime = xmlInfo.Groups[5].Value;
+                //scoreEntry.Comment = xmlInfo.Groups[7].Value;
+                scoreEntry.Mode = xmlInfo.Groups[8].Value;
+                scoreEntry.Username = xmlInfo.Groups[9].Value;
 
                 songInfo.AddScoreboardEntry(scoreEntry);
             }
@@ -195,8 +197,8 @@ namespace AS2_Companion
 
         static string SerializeSongData(List<Song> songList)
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AS2Companion.xml";
-            System.IO.FileStream file = System.IO.File.Create(path);
+            //var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AS2Companion.xml";
+            //System.IO.FileStream file = System.IO.File.Create(path);
 
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Song>));
 
@@ -230,12 +232,12 @@ namespace AS2_Companion
             }
         }*/
 
-        static void PostRequest(string xmlString)
+        static void PostSongData(string xmlString)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
             byte[] bytes;
             bytes = System.Text.Encoding.ASCII.GetBytes(xmlString);
-            request.ContentType = "text/xml; encoding='utf-8'";
+            request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = bytes.Length;
             request.Method = "POST";
             Stream requestStream = request.GetRequestStream();
