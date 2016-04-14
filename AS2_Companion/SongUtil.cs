@@ -10,12 +10,11 @@ namespace AS2_Companion
 {
     /*
     TODO:
-    Cleanup 'parent' situation
-    Make sure the XML match doesn't get stuck looping
-
-    Each scoreboard entry doesn't need to include mode
-    
-    Handle post request exception
+    - Cleanup 'parent' situation
+    - Make sure the XML match doesn't get stuck looping
+    - Each scoreboard entry doesn't need to include mode
+    - Handle post request exception
+    - Handle multiple modes when checking existing songs
     */
 
     public static class SongUtil
@@ -127,8 +126,13 @@ namespace AS2_Companion
 
             if (songList.Exists(song => song.Title == songTitle)) // If the song is already there add the score to it
             {
-                songInfo = songList.Single(song => song.Title == songTitle);
-                songInfo.AddScore(songScore);
+                var index = songList.FindIndex(song => song.Title == songTitle); // get the song index
+
+                songInfo = songList[index]; // get the song object
+                songInfo.AddScore(songScore); // add the new score
+
+                songList.RemoveAt(index); // remove it from the old index
+                songList.Add(songInfo); // add it back at the last index to prevent data mismatch
             }
             else // Otherwise create the song and add it to the list
             {
