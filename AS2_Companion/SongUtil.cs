@@ -164,10 +164,13 @@ namespace AS2_Companion
         {
             string line = "";
             Song songInfo = songList.Last();
-            Match xmlEnd = Regex.Match(line, "</scoreboard>");
-            Match xmlInfo;
+            Match xmlInfo, nextEntry;
+            bool xmlEnd = false;
 
-            Scoreboard scoreEntry;
+            Scoreboard scoreBoard = new Scoreboard(); // Instantiate the scoreboard
+            scoreBoard.Global = new Scoreboard.Category(); // Instantiate the global entry
+            Scoreboard.Category boardCategory = scoreBoard.Global; // Set the global entry
+            Scoreboard.Entry scoreEntry;
 
             songInfo.SongID = xmlStart.Groups[7].Value; // Set the song ID
             songInfo.UserID = xmlStart.Groups[1].Value; // Set the user 
@@ -177,15 +180,42 @@ namespace AS2_Companion
 
             songInfo.SetCanPost(xmlStart.Groups[4].Value); // Set if cheats were detected
 
-            while (!xmlEnd.Success) // While we aren't at the end of the scoreboard
+            while (!xmlEnd) // While we aren't done parsing the scoreboard
             {
                 line = input.ReadLine(); // Read the next line of scoreboard
-                xmlEnd = Regex.Match(line, "</scoreboard>"); // Match if we're at the end yet
-                scoreEntry = new Scoreboard();
 
-                if (xmlEnd.Success) break; // Don't continue if it's the end
+                nextEntry = Regex.Match(line, "</scoreboard>");
+
+                if (nextEntry.Success) // Check if we need to change entries
+                {
+                    if (scoreBoard.Regional != null)
+                    {
+                        xmlEnd = true; // We're done parsing
+                        songInfo.AddScoreboard(scoreBoard); // Add the scoreboard to the song
+                        break;
+                    }
+
+                    if (boardCategory == scoreBoard.Global)
+                    {
+                        scoreBoard.Friends = new Scoreboard.Category(); // Instantiate the friends entry
+                        boardCategory = scoreBoard.Friends; // Set the friends entry
+                    }
+                    else
+                    {
+                        scoreBoard.Regional = new Scoreboard.Category(); // Instantiate the regional entry
+                        boardCategory = scoreBoard.Regional; // Set the regional entry
+                    }
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        line = input.ReadLine();
+                        //Console.WriteLine(line);
+                    }
+                }
 
                 xmlInfo = Regex.Match(line, @"<ride userid='(.+)' steamid='(.+)' score='(.+)' charid='(.+)' ridetime='(.+)'>(<comment>(.+)</comment>)?<modename>(.+)</modename><username>(.+)</username>");
+
+                scoreEntry = new Scoreboard.Entry();
 
                 scoreEntry.UserID = xmlInfo.Groups[1].Value;
                 scoreEntry.SteamID = xmlInfo.Groups[2].Value;
@@ -195,7 +225,7 @@ namespace AS2_Companion
                 scoreEntry.Mode = xmlInfo.Groups[8].Value;
                 scoreEntry.Username = xmlInfo.Groups[9].Value;
 
-                songInfo.AddScoreboardEntry(scoreEntry);
+                boardCategory.Entries.Add(scoreEntry);
             }
         }
 
@@ -213,37 +243,20 @@ namespace AS2_Companion
             return textWriter.ToString();
         }
 
-        /*static void PrintScoreboardData(Song songInfo)
-        {
-            try
-            {
-                foreach (Dictionary<string, string> entry in songInfo.Scoreboard)
-                {
-                    Console.WriteLine("UserID: " + entry["UserID"]);
-                    Console.WriteLine("SteamID: " + entry["SteamID"]);
-                    Console.WriteLine("Score: " + entry["Score"]);
-                    Console.WriteLine("RideTime: " + entry["RideTime"]);
-                    Console.WriteLine("Mode: " + entry["Mode"]);
-                    Console.WriteLine("Username: " + entry["Username"]);
-                    Console.WriteLine(" ");
-                }
-            }
-            catch (Exception ex)
-            {
-                //Handle exception
-                Console.WriteLine("There was an error printing scoreboard data!");
-                Console.WriteLine(ex.Message);
-            }
-        }*/
-
         static void PostSongData(string xmlString)
         {
+            //Decode the string
+            string decoded = xmlString.Replace("&amp;", "&").Replace("lt;", "<").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'");
+
+            //Create the request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
             byte[] bytes;
-            bytes = System.Text.Encoding.ASCII.GetBytes(xmlString);
+            bytes = System.Text.Encoding.ASCII.GetBytes(decoded);
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = bytes.Length;
             request.Method = "POST";
+
+            //Get the reponse
             Stream requestStream = request.GetRequestStream();
             requestStream.Write(bytes, 0, bytes.Length);
             requestStream.Close();

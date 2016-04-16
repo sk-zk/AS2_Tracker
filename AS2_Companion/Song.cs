@@ -10,8 +10,7 @@ namespace AS2_Companion
 
         public List<string> Scores = new List<string>();
 
-        [XmlArrayItem("Entry")] //define XML name for the entries
-        public List<Scoreboard> Scoreboard = new List<Scoreboard>();
+        public Scoreboard Scoreboard;
 
         public static int Count = 0; // Total number of songs loaded
 
@@ -35,9 +34,9 @@ namespace AS2_Companion
             this.Scores.Add(_score);
         }
 
-        public void AddScoreboardEntry(Scoreboard _entry)
+        public void AddScoreboard(Scoreboard _scoreboard)
         {
-            this.Scoreboard.Add(_entry);
+            this.Scoreboard = _scoreboard;
         }
 
         public void SetCanPost(string _canpost)

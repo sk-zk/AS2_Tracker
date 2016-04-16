@@ -7,6 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace AS2_Companion
 {
+    /*
+    TODO: Add minimize button
+    */
+
     public partial class MainForm : Form
     {
         /*
