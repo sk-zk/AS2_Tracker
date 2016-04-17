@@ -1,19 +1,12 @@
-AS2 Companion
+AS2 Tracker
 =============
 
 A Windows companion app project for Audiosurf 2.
 
 ### Current Features
-- Loads song and score data from the output_log
+- Collects song, score, and user data for http://as2tracker.nl
 - Seamlessly monitors the AS2 process
-- Automatically loads latest songs and scores when the game exits
-- Retrieves data and statistics for future use
-
-
-### Future Plans
-- Post the song, score, and user data to a web server
-- Launch website for leaderboards, statistics, and tracking
-- Continue to refine the concept
+- Grabs latest songs and scores upon game exit
 
 ![Process Monitor](http://f.bay.rocks/Q8vTN)
 
