@@ -108,7 +108,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.songBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainForm";

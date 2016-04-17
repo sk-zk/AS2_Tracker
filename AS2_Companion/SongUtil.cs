@@ -12,9 +12,7 @@ namespace AS2_Companion
     TODO:
     - Cleanup 'parent' situation
     - Make sure the XML match doesn't get stuck looping
-    - Each scoreboard entry doesn't need to include mode
     - Handle post request exception
-    - Handle multiple modes when checking existing songs
     */
 
     public static class SongUtil
@@ -120,6 +118,7 @@ namespace AS2_Companion
         static void HandleScoreMatch(MainForm parent, Match scoreMatch, List<Song> songList)
         {
             Song songInfo;
+            Song.Score scoreInfo = new Song.Score(); // Instantiate the new score
 
             string songTitle = scoreMatch.Groups[2].Value;
             string songScore = scoreMatch.Groups[1].Value;
@@ -128,8 +127,10 @@ namespace AS2_Companion
             {
                 var index = songList.FindIndex(song => song.Title == songTitle); // get the song index
 
+                scoreInfo.Value = songScore;
+
                 songInfo = songList[index]; // get the song object
-                songInfo.AddScore(songScore); // add the new score
+                songInfo.AddScore(scoreInfo); // add the new score
 
                 songList.RemoveAt(index); // remove it from the old index
                 songList.Add(songInfo); // add it back at the last index to prevent data mismatch
@@ -138,7 +139,9 @@ namespace AS2_Companion
             {
                 songInfo = new Song();
                 songInfo.Title = songTitle;
-                songInfo.AddScore(songScore);
+                songInfo.Artist = " "; // Instantiate the artist field
+                scoreInfo.Value = songScore;
+                songInfo.AddScore(scoreInfo);
                 songList.Add(songInfo);
                 parent.songBox.Items.Add(songInfo);
             }
@@ -164,6 +167,7 @@ namespace AS2_Companion
         {
             string line = "";
             Song songInfo = songList.Last();
+            Song.Score scoreInfo = songInfo.Scores.Last();
             Match xmlInfo, nextEntry;
             bool xmlEnd = false;
 
@@ -175,8 +179,8 @@ namespace AS2_Companion
             songInfo.SongID = xmlStart.Groups[7].Value; // Set the song ID
             songInfo.UserID = xmlStart.Groups[1].Value; // Set the user 
             songInfo.UserRegion = xmlStart.Groups[2].Value; // Set user region
-            songInfo.UserEmail = xmlStart.Groups[3].Value; // Set user email 
-            songInfo.Mode = xmlStart.Groups[6].Value; // Set song mode
+            songInfo.UserEmail = xmlStart.Groups[3].Value; // Set user email
+            scoreInfo.Mode = xmlStart.Groups[6].Value; // Set song mode
 
             songInfo.SetCanPost(xmlStart.Groups[4].Value); // Set if cheats were detected
 
@@ -221,9 +225,14 @@ namespace AS2_Companion
                 scoreEntry.SteamID = xmlInfo.Groups[2].Value;
                 scoreEntry.Score = xmlInfo.Groups[3].Value;
                 scoreEntry.RideTime = xmlInfo.Groups[5].Value;
-                //scoreEntry.Comment = xmlInfo.Groups[7].Value;
                 scoreEntry.Mode = xmlInfo.Groups[8].Value;
                 scoreEntry.Username = xmlInfo.Groups[9].Value;
+
+                scoreEntry.Comment = " "; // Instantiate the comment field
+                if (!String.IsNullOrEmpty(xmlInfo.Groups[7].Value))
+                {
+                    scoreEntry.Comment = xmlInfo.Groups[7].Value;
+                }
 
                 boardCategory.Entries.Add(scoreEntry);
             }

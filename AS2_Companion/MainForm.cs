@@ -73,7 +73,7 @@ namespace AS2_Companion
             foreach (var score in songInfo.Scores)
             {
                 count += 1; // Increment score count
-                parseResult = Int32.TryParse(score, out scoreToInt); // Attempt to parse the score to an integer so we can format it
+                parseResult = Int32.TryParse(score.Value, out scoreToInt); // Attempt to parse the score to an integer so we can format it
 
                 if (parseResult)
                     MessageBox.Show(String.Format("Score {0}: {1:n0}", count, scoreToInt));

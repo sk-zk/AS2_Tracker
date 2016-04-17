@@ -24,7 +24,7 @@ namespace AS2_Companion
             public string Score { get; set; }
             public string RideTime { get; set; }
             public string Mode { get; set; }
-            //public string Comment { get; set; }
+            public string Comment { get; set; }
             public string Username { get; set; }
         }
     }
