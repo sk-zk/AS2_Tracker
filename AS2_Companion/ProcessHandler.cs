@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     /*
     TODO:

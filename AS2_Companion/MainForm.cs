@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     /*
     TODO: Add minimize button
@@ -25,6 +25,8 @@ namespace AS2_Companion
 
             ProcessHandler.StartTimer(this); // Instantiate process timer with Form1 as the parent
             SetLabelStatus(ProcessHandler.ProcessStatus()); // Set the label to the process status
+
+            UpdateHandler.InstallUpdateSyncWithInfo();
         }
 
         /*
@@ -66,8 +68,11 @@ namespace AS2_Companion
             if (songBox.SelectedItem == null) return;
 
             Song songInfo = (Song)songBox.SelectedItem;
+            string songURL = "http://www.as2tracker.nl/song.php?id=" + songInfo.SongID;
 
-            int count = 0;
+            System.Diagnostics.Process.Start(songURL);
+
+            /*int count = 0;
             int scoreToInt;
             bool parseResult;
             foreach (var score in songInfo.Scores)
@@ -79,7 +84,7 @@ namespace AS2_Companion
                     MessageBox.Show(String.Format("Score {0}: {1:n0}", count, scoreToInt));
                 else
                     MessageBox.Show(String.Format("Score {0}: {1}", count, score));
-            }
+            }*/
         }
 
         /*

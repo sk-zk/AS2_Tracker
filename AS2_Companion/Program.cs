@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     static class Program
     {

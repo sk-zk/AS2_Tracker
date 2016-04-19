@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     public class Scoreboard
     {

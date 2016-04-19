@@ -1,4 +1,4 @@
-﻿namespace AS2_Companion
+﻿namespace AS2_Tracker
 {
     partial class OptionsMenu
     {

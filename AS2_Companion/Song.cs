@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     public class Song
     {
         public string Title { get; set; }
         public string Artist { get; set; }
+        //public string Duration { get; set; }
 
         public List<Score> Scores = new List<Score>();
 

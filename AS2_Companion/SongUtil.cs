@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace AS2_Companion
+namespace AS2_Tracker
 {
     /*
     TODO:
@@ -152,6 +153,7 @@ namespace AS2_Companion
             Song songInfo = songList.Last();
 
             string songArtist = artistMatch.Groups[2].Value;
+            //string songDuration = artistMatch.Groups[1].Value;
 
             if (songList.Exists(song => song.Artist == songArtist)) // If the artist is already there do nothing
             {
@@ -160,6 +162,7 @@ namespace AS2_Companion
             else // Otherwise add the artist to the song
             {
                 songInfo.Artist = songArtist;
+                //songInfo.Duration = songDuration;
             }
         }
 
@@ -217,7 +220,7 @@ namespace AS2_Companion
                     }
                 }
 
-                xmlInfo = Regex.Match(line, @"<ride userid='(.+)' steamid='(.+)' score='(.+)' charid='(.+)' ridetime='(.+)'>(<comment>(.+)</comment>)?<modename>(.+)</modename><username>(.+)</username>");
+                xmlInfo = Regex.Match(line, "<ride userid='(.+)' steamid='(.+)' score='(.+)' charid='(.+)' ridetime='(.+)'>(<comment>(.+)</comment>)?<modename>(.+)</modename><username>(.+)</username>");
 
                 scoreEntry = new Scoreboard.Entry();
 
@@ -238,14 +241,19 @@ namespace AS2_Companion
             }
         }
 
+        class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+        }
+
         static string SerializeSongData(List<Song> songList)
         {
-            //var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AS2Companion.xml";
+            //var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//AS2Tracker.xml";
             //System.IO.FileStream file = System.IO.File.Create(path);
 
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Song>));
 
-            StringWriter textWriter = new StringWriter();
+            StringWriter textWriter = new Utf8StringWriter();
 
             serializer.Serialize(textWriter, songList);
 
@@ -254,14 +262,18 @@ namespace AS2_Companion
 
         static void PostSongData(string xmlString)
         {
-            //Decode the string
-            string decoded = xmlString.Replace("&amp;", "&").Replace("lt;", "<").Replace("&gt;", ">").Replace("&quot;", "\"").Replace("&apos;", "'");
+            //Decode the string to prevent encoding issues
+            string decoded = WebUtility.HtmlDecode(xmlString);
+            decoded = WebUtility.HtmlDecode(decoded); // MUST double decode
+            decoded = decoded.Replace("&", "and"); // ampersands break the post request
 
             //Create the request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
             byte[] bytes;
-            bytes = System.Text.Encoding.ASCII.GetBytes(decoded);
-            request.ContentType = "application/x-www-form-urlencoded";
+            bytes = Encoding.UTF8.GetBytes(decoded);
+            //string utf8 = System.Text.Encoding.UTF8.GetString(bytes);
+            //Console.WriteLine(utf8);
+            request.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
             request.ContentLength = bytes.Length;
             request.Method = "POST";
 
@@ -274,7 +286,7 @@ namespace AS2_Companion
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 Stream responseStream = response.GetResponseStream();
-                string responseStr = new StreamReader(responseStream).ReadToEnd();
+                string responseStr = new StreamReader(responseStream, Encoding.UTF8).ReadToEnd();
 
                 Console.WriteLine(responseStr);
             }
