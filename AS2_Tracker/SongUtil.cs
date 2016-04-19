@@ -69,7 +69,7 @@ namespace AS2_Tracker
                         continue;
                     }
 
-                    artistMatch = Regex.Match(line, "duration(.+)artist:(.+)");
+                    artistMatch = Regex.Match(line, "duration:(.+) artist:(.+)");
 
                     if (artistMatch.Success)
                     {
@@ -153,7 +153,7 @@ namespace AS2_Tracker
             Song songInfo = songList.Last();
 
             string songArtist = artistMatch.Groups[2].Value;
-            //string songDuration = artistMatch.Groups[1].Value;
+            string songDuration = artistMatch.Groups[1].Value;
 
             if (songList.Exists(song => song.Artist == songArtist)) // If the artist is already there do nothing
             {
@@ -162,7 +162,7 @@ namespace AS2_Tracker
             else // Otherwise add the artist to the song
             {
                 songInfo.Artist = songArtist;
-                //songInfo.Duration = songDuration;
+                songInfo.Duration = songDuration;
             }
         }
 
