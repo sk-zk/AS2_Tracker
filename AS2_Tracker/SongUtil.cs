@@ -289,7 +289,7 @@ namespace AS2_Tracker
                 Stream responseStream = response.GetResponseStream();
                 string responseStr = new StreamReader(responseStream, Encoding.UTF8).ReadToEnd();
 
-                Console.WriteLine(responseStr);
+                //Console.WriteLine(responseStr);
             }
         }
     }

@@ -62,7 +62,7 @@ namespace AS2_Tracker
             if (songBox.SelectedItem == null) return;
 
             Song songInfo = (Song)songBox.SelectedItem;
-            string songURL = "http://www.as2tracker.nl/song.php?id=" + songInfo.SongID;
+            string songURL = "http://www.as2tracker.com/song.php?id=" + songInfo.SongID;
 
             System.Diagnostics.Process.Start(songURL);
 
