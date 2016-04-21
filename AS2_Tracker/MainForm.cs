@@ -25,8 +25,6 @@ namespace AS2_Tracker
 
             ProcessHandler.StartTimer(this); // Instantiate process timer with Form1 as the parent
             SetLabelStatus(ProcessHandler.ProcessStatus()); // Set the label to the process status
-
-            UpdateHandler.InstallUpdateSyncWithInfo();
         }
 
         /*

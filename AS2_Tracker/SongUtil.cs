@@ -108,11 +108,12 @@ namespace AS2_Tracker
 
                 LastLogWrite = File.GetLastWriteTime(file); // Store the write time of the last loaded file
 
-                MessageBox.Show(String.Format("Successfully loaded {0:n0} songs from path {1}", Song.Count, file));
-
                 string xmlString = SerializeSongData(songList); // serialize the song data to a string
                 //Console.WriteLine(xmlString);
+                Cursor.Current = Cursors.WaitCursor;
                 //PostSongData(xmlString); // post the xml to the web server
+
+                MessageBox.Show(String.Format("Successfully loaded {0:n0} songs from path {1}", Song.Count, file));
             }
         }
 

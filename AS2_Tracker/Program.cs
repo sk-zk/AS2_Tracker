@@ -14,6 +14,7 @@ namespace AS2_Tracker
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
+            UpdateHandler.InstallUpdateSyncWithInfo();
         }
     }
 }
