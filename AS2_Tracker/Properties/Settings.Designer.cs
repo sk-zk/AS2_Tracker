@@ -34,5 +34,17 @@ namespace AS2_Tracker.Properties {
                 this["outputPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool startRegistryExists {
+            get {
+                return ((bool)(this["startRegistryExists"]));
+            }
+            set {
+                this["startRegistryExists"] = value;
+            }
+        }
     }
 }
