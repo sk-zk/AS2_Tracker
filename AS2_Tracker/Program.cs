@@ -28,6 +28,7 @@ namespace AS2_Tracker
             {
                 registry.SetValue("AS2_Tracker", Application.ExecutablePath.ToString());
                 Properties.Settings.Default.startRegistryExists = true;
+                Properties.Settings.Default.Save();
             }
 
             //TODO: Add optional checkbox to remove it from startup
