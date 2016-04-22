@@ -32,7 +32,7 @@ namespace AS2_Tracker
             }
 
             //TODO: Add optional checkbox to remove it from startup
-            //rk.DeleteValue(AppName, false);
+            //registry.DeleteValue(AppName, false);
         }
     }
 }

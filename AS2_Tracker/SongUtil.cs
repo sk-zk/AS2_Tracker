@@ -56,11 +56,19 @@ namespace AS2_Tracker
                 }
 
                 string line;
-                Match scoreMatch, xmlMatch, artistMatch;
+                Match soundcloudMatch, scoreMatch, xmlMatch, artistMatch;
                 StreamReader output = new StreamReader(file);
 
                 while ((line = output.ReadLine()) != null)
                 {
+                    /*soundcloudMatch = Regex.Match(line, @"url:(https://api\.soundcloud\.com/tracks\?q=.+)");
+
+                    if (soundcloudMatch.Success)
+                    {
+                        HandleSoundcloudMatch(parent, soundcloudMatch);
+                        continue;
+                    }*/
+
                     scoreMatch = Regex.Match(line, @"setting score (\d+) for song: (.+)");
 
                     if (scoreMatch.Success)
@@ -113,9 +121,16 @@ namespace AS2_Tracker
                 Cursor.Current = Cursors.WaitCursor;
                 //PostSongData(xmlString); // post the xml to the web server
 
-                MessageBox.Show(String.Format("Successfully loaded {0:n0} songs from path {1}", Song.Count, file));
+                parent.taskNotification("Success!", String.Format("Posted {0:n0} songs to AS2Tracker.com", Song.Count));
             }
         }
+
+        /*static string LastSoundcloudLink = " "; // Stores the last match of a soundcloud link
+
+        static void HandleSoundcloudMatch(MainForm parent, Match soundcloudMatch)
+        {
+            LastSoundcloudLink = soundcloudMatch.Groups[1].Value;
+        }*/
 
         static void HandleScoreMatch(MainForm parent, Match scoreMatch, List<Song> songList)
         {
@@ -142,6 +157,8 @@ namespace AS2_Tracker
                 songInfo = new Song();
                 songInfo.Title = songTitle;
                 songInfo.Artist = " "; // Instantiate the artist field
+                //songInfo.SoundcloudLink = LastSoundcloudLink;
+                //LastSoundcloudLink = " "; //Reset the latest SC link
                 scoreInfo.Value = songScore;
                 songInfo.AddScore(scoreInfo);
                 songList.Add(songInfo);

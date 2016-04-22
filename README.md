@@ -8,7 +8,7 @@ A Windows app project for tracking data from Audiosurf 2.
 - Seamlessly monitors the AS2 process
 - Grabs latest songs and scores upon game exit
 
-![Process Monitor](http://f.bay.rocks/Q8vTN)
+![Process Monitor](http://f.bay.rocks/1gDJu)
 
 ![Success](http://f.bay.rocks/chDxq)
 

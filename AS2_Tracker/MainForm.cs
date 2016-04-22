@@ -82,6 +82,54 @@ namespace AS2_Tracker
         }
 
         /*
+        System tray logic
+        */
+        private void MainForm_Resize(object sender, System.EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState)
+            {
+                Hide();
+                taskNotification("Minimized", "AS2 Tracker was moved to system tray");
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == WindowState)
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+            }
+        }
+
+        public void taskNotification(string title, string body)
+        {
+            if (title != null)
+            {
+                notifyIcon1.BalloonTipTitle = title;
+            }
+
+            if (body != null)
+            {
+                notifyIcon1.BalloonTipText = body;
+            }
+
+            notifyIcon1.ShowBalloonTip(3000);
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            notifyIcon1.Visible = false;
+            notifyIcon1.Dispose();
+        }
+
+        /*
         Toolstrip logic
         */
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
