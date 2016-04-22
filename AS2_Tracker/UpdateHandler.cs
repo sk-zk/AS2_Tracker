@@ -6,7 +6,7 @@ namespace AS2_Tracker
 {
     public static class UpdateHandler
     {
-        public static void InstallUpdateSyncWithInfo()
+        public static void InstallUpdateSyncWithInfo(MainForm parent)
         {
             UpdateCheckInfo info = null;
 
@@ -63,7 +63,7 @@ namespace AS2_Tracker
                         try
                         {
                             ad.Update();
-                            MessageBox.Show("The application has been updated, and will now restart.");
+                            parent.taskNotification("Update", "The application has been updated, and will now restart.");
                             Application.Restart();
                         }
                         catch (DeploymentDownloadException dde)

@@ -14,10 +14,12 @@ namespace AS2_Tracker
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            MainForm parent = new MainForm();
+            Application.Run(parent);
 
             SetStartup(); // Add app to startup registry if it's not already
-            UpdateHandler.InstallUpdateSyncWithInfo(); // Check for updates
+            UpdateHandler.InstallUpdateSyncWithInfo(parent); // Check for updates
         }
 
         static void SetStartup()

@@ -26,12 +26,15 @@ namespace AS2_Tracker
         /// An array of strings containing file paths to be loaded
         /// </param>
 
+        static MainForm parent;
         public static DateTime? LastLogWrite; // Stores the last write time of the log
 
-        public static void LoadSongList(MainForm parent, string[] _files)
+        public static void LoadSongList(MainForm _parent, string[] _files)
         {
             string outputLog = "output_log.txt";
             string[] files = _files;
+
+            parent = _parent;
 
             List<Song> songList = new List<Song>();
 
@@ -119,9 +122,7 @@ namespace AS2_Tracker
                 string xmlString = SerializeSongData(songList); // serialize the song data to a string
                 //Console.WriteLine(xmlString);
                 Cursor.Current = Cursors.WaitCursor;
-                //PostSongData(xmlString); // post the xml to the web server
-
-                parent.taskNotification("Success!", String.Format("Posted {0:n0} songs to AS2Tracker.com", Song.Count));
+                PostSongData(xmlString); // post the xml to the web server
             }
         }
 
@@ -285,28 +286,37 @@ namespace AS2_Tracker
             decoded = WebUtility.HtmlDecode(decoded); // MUST double decode
             decoded = decoded.Replace("&", "and"); // ampersands break the post request
 
-            //Create the request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
-            byte[] bytes;
-            bytes = Encoding.UTF8.GetBytes(decoded);
-            //string utf8 = System.Text.Encoding.UTF8.GetString(bytes);
-            //Console.WriteLine(utf8);
-            request.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
-            request.ContentLength = bytes.Length;
-            request.Method = "POST";
-
-            //Get the reponse
-            Stream requestStream = request.GetRequestStream();
-            requestStream.Write(bytes, 0, bytes.Length);
-            requestStream.Close();
-            HttpWebResponse response;
-            response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                Stream responseStream = response.GetResponseStream();
-                string responseStr = new StreamReader(responseStream, Encoding.UTF8).ReadToEnd();
+                //Create the request
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
+                byte[] bytes;
+                bytes = Encoding.UTF8.GetBytes(decoded);
+                //string utf8 = System.Text.Encoding.UTF8.GetString(bytes);
+                //Console.WriteLine(utf8);
+                request.ContentType = "application/x-www-form-urlencoded;charset=utf-8";
+                request.ContentLength = bytes.Length;
+                request.Method = "POST";
 
-                //Console.WriteLine(responseStr);
+                //Get the reponse
+                Stream requestStream = request.GetRequestStream();
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+                HttpWebResponse response;
+                response = (HttpWebResponse)request.GetResponse();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Stream responseStream = response.GetResponseStream();
+                    string responseStr = new StreamReader(responseStream, Encoding.UTF8).ReadToEnd();
+
+                    parent.taskNotification("Success!", String.Format("Posted {0:n0} songs to AS2Tracker.com", Song.Count));
+                    //Console.WriteLine(responseStr);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error posting scores to server:\n" + e.Message);
+                //throw;
             }
         }
     }

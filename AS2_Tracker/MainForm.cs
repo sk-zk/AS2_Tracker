@@ -19,7 +19,7 @@ namespace AS2_Tracker
             if (Properties.Settings.Default.outputPath != "")
                 loadFileToolStripMenuItem.Enabled = true; // Enable file loading if path isn't empty
 
-            ProcessHandler.StartTimer(this); // Instantiate process timer with Form1 as the parent
+            ProcessHandler.StartTimer(this); // Instantiate process timer with MainForm as the parent
             SetLabelStatus(ProcessHandler.ProcessStatus()); // Set the label to the process status
         }
 
