@@ -110,6 +110,8 @@ namespace AS2_Tracker
 
         public void taskNotification(string title, string body)
         {
+            if (!Properties.Settings.Default.shouldTrayNotify) return;
+
             if (title != null)
             {
                 notifyIcon1.BalloonTipTitle = title;

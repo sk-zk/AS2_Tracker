@@ -63,7 +63,7 @@ namespace AS2_Tracker
                         try
                         {
                             ad.Update();
-                            parent.taskNotification("Update", "The application has been updated, and will now restart.");
+                            parent.taskNotification("Update", "AS2 Tracker has been updated, and will now restart.");
                             Application.Restart();
                         }
                         catch (DeploymentDownloadException dde)

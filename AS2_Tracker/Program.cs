@@ -26,15 +26,20 @@ namespace AS2_Tracker
         {
             RegistryKey registry = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-            if (Properties.Settings.Default.startRegistryExists != true)
+            if (Properties.Settings.Default.startRegistryExists != true
+                && Properties.Settings.Default.shouldRunOnStartup == true)
             {
                 registry.SetValue("AS2_Tracker", Application.ExecutablePath.ToString());
                 Properties.Settings.Default.startRegistryExists = true;
                 Properties.Settings.Default.Save();
             }
-
-            //TODO: Add optional checkbox to remove it from startup
-            //registry.DeleteValue(AppName, false);
+            else
+            {
+                if (registry != null && Properties.Settings.Default.shouldRunOnStartup != true)
+                {
+                    registry.DeleteValue("AS2_Tracker", false);
+                }
+            }
         }
     }
 }

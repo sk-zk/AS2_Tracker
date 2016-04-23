@@ -51,5 +51,39 @@ namespace AS2_Tracker
         {
             //text change logic goes here
         }
+
+        private void shouldStartup_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!shouldStartup.Checked)
+            {
+                Properties.Settings.Default.shouldRunOnStartup = false;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                Properties.Settings.Default.shouldRunOnStartup = true;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void shouldTrayNotify_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!shouldTrayNotify.Checked)
+            {
+                Properties.Settings.Default.shouldTrayNotify = false;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                Properties.Settings.Default.shouldTrayNotify = true;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void OptionsMenu_Shown(object sender, EventArgs e)
+        {
+            shouldTrayNotify.Checked = Properties.Settings.Default.shouldTrayNotify;
+            shouldStartup.Checked = Properties.Settings.Default.shouldRunOnStartup;
+        }
     }
 }

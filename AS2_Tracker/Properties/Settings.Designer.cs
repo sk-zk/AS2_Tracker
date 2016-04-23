@@ -46,5 +46,29 @@ namespace AS2_Tracker.Properties {
                 this["startRegistryExists"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool shouldRunOnStartup {
+            get {
+                return ((bool)(this["shouldRunOnStartup"]));
+            }
+            set {
+                this["shouldRunOnStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool shouldTrayNotify {
+            get {
+                return ((bool)(this["shouldTrayNotify"]));
+            }
+            set {
+                this["shouldTrayNotify"] = value;
+            }
+        }
     }
 }
