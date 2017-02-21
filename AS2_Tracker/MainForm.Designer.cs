@@ -72,7 +72,7 @@
             // 
             // loadFileToolStripMenuItem
             // 
-            this.loadFileToolStripMenuItem.Enabled = false;
+            this.loadFileToolStripMenuItem.Enabled = true;
             this.loadFileToolStripMenuItem.Name = "loadFileToolStripMenuItem";
             this.loadFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.loadFileToolStripMenuItem.Text = "Load File";

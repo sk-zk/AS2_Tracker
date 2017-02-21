@@ -29,7 +29,7 @@ namespace AS2_Tracker
 
 			dialog.InitialDirectory = Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-				"/unity3d/Audiosurf, LLC/Audiosurf 2/");
+				"unity3d/Audiosurf, LLC/Audiosurf 2/");
 
             DialogResult result = dialog.ShowDialog();
 

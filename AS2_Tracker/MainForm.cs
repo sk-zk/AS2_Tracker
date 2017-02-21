@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.IO;
 
 namespace AS2_Tracker
 {
@@ -16,8 +17,13 @@ namespace AS2_Tracker
         {
             InitializeComponent();
 
-            if (Properties.Settings.Default.outputPath != "")
-                loadFileToolStripMenuItem.Enabled = true; // Enable file loading if path isn't empty
+			if (Properties.Settings.Default.outputPath == "") {
+				Properties.Settings.Default.outputPath = Path.Combine(
+					Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+					"unity3d/Audiosurf, LLC/Audiosurf 2/Player.log");
+				Properties.Settings.Default.Save();
+			}
+                
 
             ProcessHandler.StartTimer(this); // Instantiate process timer with MainForm as the parent
             SetLabelStatus(ProcessHandler.ProcessStatus()); // Set the label to the process status
