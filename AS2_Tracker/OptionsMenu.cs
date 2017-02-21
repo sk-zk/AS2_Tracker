@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.IO;
 
 namespace AS2_Tracker
 {
@@ -24,7 +25,11 @@ namespace AS2_Tracker
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.Filter = "Text Files | *.txt";
+            dialog.Filter = "Log files | *.log";
+
+			dialog.InitialDirectory = Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+				"/unity3d/Audiosurf, LLC/Audiosurf 2/");
 
             DialogResult result = dialog.ShowDialog();
 
@@ -34,6 +39,7 @@ namespace AS2_Tracker
 
                 Properties.Settings.Default.outputPath = dialog.FileName;
                 Properties.Settings.Default.Save();
+				Properties.Settings.Default.Upgrade();
 
                 if (!parent.loadFileToolStripMenuItem.Enabled)
                     parent.loadFileToolStripMenuItem.Enabled = true;

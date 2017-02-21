@@ -31,7 +31,7 @@ namespace AS2_Tracker
 
         public static void LoadSongList(MainForm _parent, string[] _files)
         {
-            string outputLog = "output_log.txt";
+            string outputLog = "Player.log";
             string[] files = _files;
 
             parent = _parent;
@@ -285,11 +285,12 @@ namespace AS2_Tracker
             string decoded = WebUtility.HtmlDecode(xmlString);
             decoded = WebUtility.HtmlDecode(decoded); // MUST double decode
             decoded = decoded.Replace("&", "and"); // ampersands break the post request
+			// ^and I thought my code was awful  -skzk
 
-            try
-            {
+            //try
+            //
                 //Create the request
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("");
+			    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://as2tracker.com/input_new.php");
                 byte[] bytes;
                 bytes = Encoding.UTF8.GetBytes(decoded);
                 //string utf8 = System.Text.Encoding.UTF8.GetString(bytes);
@@ -312,12 +313,12 @@ namespace AS2_Tracker
                     parent.taskNotification("Success!", String.Format("Posted {0:n0} songs to AS2Tracker.com", Song.Count));
                     //Console.WriteLine(responseStr);
                 }
-            }
-            catch (Exception e)
+            //}
+            /*catch (Exception e)
             {
                 MessageBox.Show("Error posting scores to server:\n" + e.Message);
                 //throw;
-            }
+            }*/
         }
     }
 }

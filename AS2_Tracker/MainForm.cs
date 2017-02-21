@@ -21,9 +21,10 @@ namespace AS2_Tracker
 
             ProcessHandler.StartTimer(this); // Instantiate process timer with MainForm as the parent
             SetLabelStatus(ProcessHandler.ProcessStatus()); // Set the label to the process status
+
         }
 
-        /*
+        /*.
         Drag drop logic
         */
         private void Form1_DragEnter(object sender, DragEventArgs e)
