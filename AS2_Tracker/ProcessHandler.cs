@@ -13,7 +13,7 @@ namespace AS2_Tracker
     {
         static MainForm parent;
         static bool processRunning;
-		static bool hasExited;
+        static bool hasExited;
         static Process audiosurf;
 
         /// <summary>
@@ -21,21 +21,25 @@ namespace AS2_Tracker
         /// </summary>
         public static void CheckProcess()
         {
-			if (!hasExited && audiosurf != null && audiosurf.HasExited) {
-				audiosurf_Exited (null, null);
-			} else {
-				if (processRunning)
-					return;
-			}
+            if (!hasExited && audiosurf != null && audiosurf.HasExited)
+            {
+                audiosurf_Exited(null, null);
+            }
+            else
+            {
+                if (processRunning)
+                    return;
+            }
 				
-			var processes = Process.GetProcessesByName("Audiosurf2.x86_64");
-			if (processes.Length == 0) return; // Don't continue if it's not running
-			audiosurf = processes[0];
+            var processes = Process.GetProcessesByName("Audiosurf2.x86_64");
+            if (processes.Length == 0)
+                return; // Don't continue if it's not running
+            audiosurf = processes[0];
 
-			//audiosurf.EnableRaisingEvents = true;
-			//audiosurf.Exited += new EventHandler(audiosurf_Exited);
-			processRunning = true;
-			hasExited = false;
+            //audiosurf.EnableRaisingEvents = true;
+            //audiosurf.Exited += new EventHandler(audiosurf_Exited);
+            processRunning = true;
+            hasExited = false;
             parent.SetLabelStatus(ProcessStatus()); // Set the label to the process status
                 
             
@@ -45,7 +49,7 @@ namespace AS2_Tracker
         static void audiosurf_Exited(object sender, System.EventArgs e)
         {
             processRunning = false;
-			hasExited = true;
+            hasExited = true;
 
             parent.SetLabelStatus(ProcessStatus()); // Set the label to the process status
 
@@ -75,6 +79,7 @@ namespace AS2_Tracker
         Handle process timer
         */
         static System.Timers.Timer processTimer;
+
         public static void StartTimer(MainForm _parent)
         {
             parent = _parent;

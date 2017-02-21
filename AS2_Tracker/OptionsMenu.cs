@@ -10,6 +10,7 @@ namespace AS2_Tracker
         Construct the form
         */
         private MainForm parent;
+
         public OptionsMenu(MainForm ParentForm)
         {
             InitializeComponent();
@@ -27,9 +28,9 @@ namespace AS2_Tracker
 
             dialog.Filter = "Log files | *.log";
 
-			dialog.InitialDirectory = Path.Combine(
-				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-				"unity3d/Audiosurf, LLC/Audiosurf 2/");
+            dialog.InitialDirectory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+                "unity3d/Audiosurf, LLC/Audiosurf 2/");
 
             DialogResult result = dialog.ShowDialog();
 
@@ -39,7 +40,7 @@ namespace AS2_Tracker
 
                 Properties.Settings.Default.outputPath = dialog.FileName;
                 Properties.Settings.Default.Save();
-				Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.Upgrade();
 
                 if (!parent.loadFileToolStripMenuItem.Enabled)
                     parent.loadFileToolStripMenuItem.Enabled = true;

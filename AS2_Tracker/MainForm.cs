@@ -17,12 +17,13 @@ namespace AS2_Tracker
         {
             InitializeComponent();
 
-			if (Properties.Settings.Default.outputPath == "") {
-				Properties.Settings.Default.outputPath = Path.Combine(
-					Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-					"unity3d/Audiosurf, LLC/Audiosurf 2/Player.log");
-				Properties.Settings.Default.Save();
-			}
+            if (Properties.Settings.Default.outputPath == "")
+            {
+                Properties.Settings.Default.outputPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+                    "unity3d/Audiosurf, LLC/Audiosurf 2/Player.log");
+                Properties.Settings.Default.Save();
+            }
                 
 
             ProcessHandler.StartTimer(this); // Instantiate process timer with MainForm as the parent
@@ -35,7 +36,8 @@ namespace AS2_Tracker
         */
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
         }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
@@ -51,9 +53,9 @@ namespace AS2_Tracker
         {
             // We may require invoking so use DoUI
             DoUI(() =>
-            {
-                label1.Text = status;
-            });
+                {
+                    label1.Text = status;
+                });
         }
 
         /*
@@ -66,7 +68,8 @@ namespace AS2_Tracker
 
         private void ShowSelectedScores()
         {
-            if (songBox.SelectedItem == null) return;
+            if (songBox.SelectedItem == null)
+                return;
 
             Song songInfo = (Song)songBox.SelectedItem;
             string songURL = "http://www.as2tracker.com/song.php?id=" + songInfo.SongID;
@@ -117,7 +120,8 @@ namespace AS2_Tracker
 
         public void taskNotification(string title, string body)
         {
-            if (!Properties.Settings.Default.shouldTrayNotify) return;
+            if (!Properties.Settings.Default.shouldTrayNotify)
+                return;
 
             if (title != null)
             {
@@ -166,6 +170,7 @@ namespace AS2_Tracker
         Handle UI requests that may require invoking
         */
         public delegate void InvokeAction();
+
         public void DoUI(InvokeAction call)
         {
             if (IsDisposed)
@@ -183,7 +188,8 @@ namespace AS2_Tracker
                     //Handle error
                 }
             }
-            else {
+            else
+            {
                 call();
             }
         }
