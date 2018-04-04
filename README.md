@@ -1,1 +1,1 @@
-Linux version of the as2tracker client. See Bayrock/AS2_Tracker for original description.
+Mostly functioning Linux port of the AS2 Tracker client. See Bayrock/AS2_Tracker for original description.
